@@ -8,7 +8,7 @@ blocks:
   - name: Install
     task:
       jobs:
-        - name: Test
+        - name: Install
           commands:
             - checkout
             - sem-version node 12
