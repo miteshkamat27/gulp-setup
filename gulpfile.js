@@ -5,6 +5,8 @@ const rename = require('gulp-rename');
 const eslint = require('gulp-eslint');
 const mocha = require('gulp-mocha');
 const sync = require('browser-sync').create();
+const uglify = require('gulp-uglify');
+const cleanCSS = require('gulp-clean-css');
 
 function copy(cb){
   src('routes/*.js')
@@ -20,6 +22,14 @@ function generateCSS(cb){
     .pipe(sync.stream());
 
   cb();
+}
+
+function minifyCSS(cb){
+  src('./public/stylesheets/*.css')
+    .pipe(cleanCSS())
+    .pipe(dest('./public/css'));
+  
+    cb();
 }
 
 function generateHTML(cb){
@@ -43,6 +53,14 @@ function runLinter(cb){
     .on('end', function(){
       cb();
     });
+}
+
+function uglifyJS(cb){
+  src(['**/*.js', '!node_modules/**', '!**/*.test.js'])
+    .pipe(uglify())
+    .pipe(dest('./public/javascripts'));
+
+  cb();
 }
 
 function runTests(cb){
@@ -80,8 +98,10 @@ function browserSync(cb){
 
 exports.copy = copy;
 exports.css = generateCSS;
+exports.minifyCSS = minifyCSS;
 exports.html = generateHTML;
 exports.lint = runLinter;
+exports.minifyJS = uglifyJS;
 exports.test = runTests;
 exports.watch = watchFiles;
 exports.sync = browserSync;
