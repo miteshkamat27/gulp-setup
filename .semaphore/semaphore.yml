@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Test
+  - name: Install
     task:
       jobs:
         - name: Test
@@ -15,5 +15,15 @@ blocks:
             - cache restore
             - npm install
             - cache store
+  - name: Gulp
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sem-version node 12
+          - cache restore
+      jobs:
+        - name: Gulp
+          commands:
             - npm install -g gulp
             - gulp
